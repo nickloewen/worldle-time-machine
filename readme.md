@@ -13,5 +13,5 @@ Just enter the date in the new header and hit "go to puzzle"
 1. Install [Userscripts Safari](https://github.com/quoid/userscripts) ([App Store](https://apps.apple.com/us/app/userscripts/id1463298887))
 2. Open the Userscripts manager
 3. Press the +, and then choose "New Remote"
-4. Paste in this URL: TODO
+4. Paste in this URL: https://raw.githubusercontent.com/nickloewen/worldle-time-machine/main/worldle-time-machine.js
 5. Press save

@@ -5,7 +5,7 @@
 // @description     Play the Worldle puzzle for any day you like, past or future
 
 // @match           https://*.worldle.teuteuf.fr/*
-// @updateURL       TODO
+// @updateURL       https://raw.githubusercontent.com/nickloewen/worldle-time-machine/main/worldle-time-machine.js
 // @version         2022-02-21.2
 
 // ==/UserScript==
