@@ -1,4 +1,4 @@
-# Wordle Time Machine
+# Wordle Time Machine (Userscript)
 
 Play the Worldle puzzle for any day you like, past or future.
 
