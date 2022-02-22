@@ -36,12 +36,7 @@ STYLE.textContent = `
     color: white;
     margin: 0;
     padding: 1em;
-  }
-
-  #time-machine div {
-     margin-left: auto;
-      margin-right: auto;
-      text-align: center;
+    text-align: center;
   }
 
   #time-machine button {
