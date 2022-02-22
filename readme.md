@@ -1,10 +1,10 @@
-# Wordle Time Machine (Userscript)
+# Worldle Time Machine (Userscript)
 
 Play the Worldle puzzle for any day you like, past or future.
 
 Just enter the date in the new header and hit "go to puzzle."
 
-(Hit "clear selection" and then "go to puzzle" to return to today's Wordle.)
+(Hit "clear selection" and then "go to puzzle" to return to today's Worldle.)
 
 ![Screenshot showing the time machine interface](worldle-time-machine-screenshot.png)
 
