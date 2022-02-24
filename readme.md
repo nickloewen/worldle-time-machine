@@ -2,6 +2,10 @@
 
 Play the [Worldle](https://worldle.teuteuf.fr) puzzle for any day you like, past or future -- just set the date in the header and hit *Time Travel !*
 
+Tested in Safari on macOS. ([See below for installation instructions.](installation-in-safari-on-macos))
+
+Not working on iOS. Not tested in other browsers.
+
 ![Screenshot showing the time machine interface](worldle-time-machine-screenshot.png)
 
 ## Installation in Safari on macOS
