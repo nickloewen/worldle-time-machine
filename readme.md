@@ -1,10 +1,6 @@
 # Worldle Time Machine (Userscript)
 
-Play the [Worldle](https://worldle.teuteuf.fr) puzzle for any day you like, past or future
-
-Just enter the date in the new header and hit "go to puzzle"
-
-(Hit "clear selection" and then "go to puzzle" to return to today's Worldle)
+Play the [Worldle](https://worldle.teuteuf.fr) puzzle for any day you like, past or future -- just set the date in the header and hit *Time Travel !*
 
 ![Screenshot showing the time machine interface](worldle-time-machine-screenshot.png)
 
