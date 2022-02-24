@@ -1,112 +1,140 @@
 // ==UserScript==
 
-// @name            Worldle – Time Machine
+// @name            Worldle - Time Machine - 3.1
 // @author          n loewen
 // @description     Play the Worldle puzzle for any day you like, past or future
 
 // @match           https://*.worldle.teuteuf.fr/*
 // @updateURL       https://raw.githubusercontent.com/nickloewen/worldle-time-machine/main/worldle-time-machine.js
-// @version         2022-02-21.2
+// @version         2022-02-24.1
 
 // ==/UserScript==
 
+// CREATE AND INSERT UI
 
-// Time machine UI
-const DATE_PICKER = document.createElement('input');
-DATE_PICKER.type = "date";
+let UIContainer = Object.assign(document.createElement('div'), {id: 'time-machine'});
+let UI = {
+  prevBtn: Object.assign(document.createElement('button'), {innerText: '−'}),
+  datePicker: Object.assign(document.createElement('input'), {id: 'date', type: 'date'}),
+  nextBtn: Object.assign(document.createElement('button'), {innerText: '+'}),
+  resetBtn: Object.assign(document.createElement('button'), {id: 'clear-btn', innerText: 'today'}),
+  reloadBtn:  Object.assign(document.createElement('button'), {id: 'reload-btn', innerText: 'time travel !'})
+}
+Object.entries(UI).forEach( ([key, value]) => UIContainer.appendChild(value) );
+document.body.prepend(UIContainer);
 
-const RELOAD_BUTTON = document.createElement('button');
-RELOAD_BUTTON.innerHTML = "go to puzzle";
 
-const CLEAR_SELECTED_DATE_BUTTON = document.createElement('button');
-CLEAR_SELECTED_DATE_BUTTON.innerHTML = "clear selection";
+// STATE
 
-const CONTAINER = document.createElement('div');
-CONTAINER.id = "time-machine";
+let dateState = {
+  set: function(d) {
+    localStorage.setItem('selectedDate', dateToShortISOString(d));
+    UI.datePicker.value = dateToShortISOString(d);
+  },
 
-CONTAINER.appendChild(DATE_PICKER);
-CONTAINER.appendChild(RELOAD_BUTTON);
-CONTAINER.appendChild(CLEAR_SELECTED_DATE_BUTTON);
-document.body.prepend(CONTAINER);
+  get: function() {
+    let d = localStorage.getItem('selectedDate');
+    // if no date is stored, use today's date -- TODO IFFY
+    if (d === null) { return new Date(); }
+    return shortISOStringToDate(d);
+  },
 
-const STYLE = document.createElement('style');
-STYLE.textContent = `
+  initialize: function() { dateState.set( dateState.get() ); },
+
+  reset: function() { dateState.set(new Date()) },
+
+  increment: function() { dateState.set(addToDate(dateState.get(), 1)) },
+
+  decrement: function() { dateState.set(addToDate(dateState.get(), -1)) }
+};
+
+
+// INITIALIZE STATE
+dateState.initialize();
+
+
+// SETUP FAKE DATE
+Date.now = function() { return dateState.get().getTime(); };
+
+
+// CONNECT STATE TO UI
+
+UI.datePicker.addEventListener('change', () => dateState.set(shortISOStringToDate(UI.datePicker.value)));
+UI.prevBtn.addEventListener('click', dateState.decrement);
+UI.nextBtn.addEventListener('click', dateState.increment);
+UI.resetBtn.addEventListener('click', dateState.reset);
+UI.reloadBtn.addEventListener('click', () => window.location.reload());
+
+
+// PURE FUNCTIONS
+
+function addToDate(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n) }
+
+function dateToShortISOString(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function shortISOStringToDate(s) {
+  let a = s.split('-')
+  return new Date(Number(a[0]), (Number(a[1]) - 1), Number(a[2]));
+}
+
+// STYLE
+
+let style = document.createElement('style');
+document.body.prepend(style);
+style.textContent = `
   #time-machine {
-    background: #111;
-    color: white;
+    background: #282828;
+    color: #999;
     margin: 0;
-    padding: 1em;
+    padding: 1.5em 0;
     text-align: center;
+    font-size: .75rem;
   }
 
   #time-machine button {
-    height: 2em;
-    background: cadetblue;
-    border: none;
-    border-radius: .25em;
-    padding: 0 1em;
-      margin-left: .5em;
-  }
-
-  #time-machine button + button {
-    background: rosybrown;
-  }
-
-  input {
-    border-radius: .25em;
+    background: #666;
+    color: #ddd;
     border: none;
     height: 2em;
+    padding: 0 1.5em;
+    font-weight: bold;
+    border-radius: .5em;
+    box-shadow: 0 .3em black;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-left: .5em;
+  }
+
+  #time-machine button:active {
+    background: #777;
+    box-shadow: 0 .2em black;
+    transform: translateY(.1em);
+  }
+
+  #time-machine input {
+    height: 2em;
+    border-radius: .5em;
+    border: none;
+    transform: translateY(.05em);
+    box-shadow: inset 0 0.2em 0.1em #bbb;
     padding: 0 1em;
-    color: initial;
+    margin-left: .5em;
+    background: #eee;
+    color: black;
   }
-  `;
 
-document.body.prepend(STYLE);
-
-// Event listeners
-DATE_PICKER.addEventListener('change', () => handleDateSelection(DATE_PICKER.valueAsDate) ); 
-RELOAD_BUTTON.addEventListener('click', () => window.location.reload());
-CLEAR_SELECTED_DATE_BUTTON.addEventListener('click', clearSelectedDate);
-
-// Set initial UI state
-updateSelectedDateDisplay();
-setFakeDate();
-
-
-// FUNCTIONS
-
-function handleDateSelection(d) {
-  localStorage.setItem('selectedDate', d);
-  updateSelectedDateDisplay();
-}
-
-// returns null OR a Date object
-function getStoredDate() {
-  let storedDate = localStorage.getItem('selectedDate');
-  if (storedDate === null) {
-    return null;
+  #time-machine #clear-btn,
+  #time-machine #reload-btn {
+    margin-left: 2em;
   }
-  return new Date(Date.parse(storedDate));
-}
 
-function updateSelectedDateDisplay() {
-  let d = getStoredDate()
-  if (d !== null) {
-    let isoDate = d.toISOString().substring(0,10);
-    DATE_PICKER.value = isoDate;
-  } else {
-    DATE_PICKER.value = null;
+  #time-machine #reload-btn {
+    background: #ddd;
+    color: black;
   }
-}
-
-function clearSelectedDate() {
-  localStorage.clear();
-  updateSelectedDateDisplay();
-}
-
-function setFakeDate() {
-  let fakeDate = getStoredDate();
-  if (fakeDate !== null) {
-      Date.now = function() { return fakeDate.getTime(); };
+  #time-machine #reload-btn:active {
+    background: #eee;
   }
-}
+`;
