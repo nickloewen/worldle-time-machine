@@ -1,6 +1,6 @@
 // ==UserScript==
 
-// @name            Worldle - Time Machine - 3.1
+// @name            Worldle - Time Machine
 // @author          n loewen
 // @description     Play the Worldle puzzle for any day you like, past or future
 
