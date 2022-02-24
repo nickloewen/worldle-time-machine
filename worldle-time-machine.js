@@ -28,6 +28,9 @@ document.body.prepend(UIContainer);
 
 let dateState = {
   set: function(d) {
+    // localStorage keeps everything in strings,
+    // and setting the date picker's value requires using a short ISO string,
+    // so we might as well save in that format
     localStorage.setItem('selectedDate', dateToShortISOString(d));
     UI.datePicker.value = dateToShortISOString(d);
   },
@@ -70,6 +73,8 @@ UI.reloadBtn.addEventListener('click', () => window.location.reload());
 
 function addToDate(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n) }
 
+// JavaScript's built-in ISO string tools assume the timezone is UTC 0,
+// so they're no good for us
 function dateToShortISOString(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
